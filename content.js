@@ -29,6 +29,70 @@
     return null;
   }
 
+  // Get conversation topic/title
+  function getConversationTopic() {
+    const platform = detectPlatform();
+
+    if (platform === 'chatgpt') {
+      // Try to get ChatGPT conversation title
+      const titleElement = document.querySelector('title');
+      if (titleElement && titleElement.textContent) {
+        const title = titleElement.textContent.replace(/\s*-\s*ChatGPT\s*$/i, '').trim();
+        if (title && title !== 'ChatGPT') {
+          return title;
+        }
+      }
+      // Fallback: try to get from h1
+      const h1 = document.querySelector('h1');
+      if (h1 && h1.textContent && h1.textContent !== 'ChatGPT') {
+        return h1.textContent.trim();
+      }
+    } else if (platform === 'claude') {
+      // Try to get Claude conversation title
+      const titleElement = document.querySelector('title');
+      if (titleElement && titleElement.textContent) {
+        const title = titleElement.textContent.replace(/\s*\|\s*Claude\s*$/i, '').trim();
+        if (title && title !== 'Claude') {
+          return title;
+        }
+      }
+    }
+
+    return '对话分享';
+  }
+
+  // Get platform logo SVG
+  function getPlatformLogo(platform) {
+    if (platform === 'chatgpt') {
+      return `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.896zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08-4.778 2.758a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z" fill="#10a37f"/>
+        </svg>
+      `;
+    } else if (platform === 'claude') {
+      return `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M17.754 13.97l-4.983 8.73a3.903 3.903 0 0 1-6.785-.07L1.301 13.3a3.896 3.896 0 0 1 .021-3.867L6.006 1.33a3.903 3.903 0 0 1 6.785.07L17.476 10.732a3.896 3.896 0 0 1 .278 3.237z" fill="#CC9B7A"/>
+          <path d="M22.699 13.3l-4.685 8.33a3.903 3.903 0 0 1-6.785-.07l-4.684-9.332a3.896 3.896 0 0 1 .021-3.867l4.684-8.33a3.903 3.903 0 0 1 6.785.07l4.685 9.331a3.896 3.896 0 0 1-.021 3.867z" fill="#191919"/>
+        </svg>
+      `;
+    }
+
+    // Default icon
+    return `
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    `;
+  }
+
+  // Get platform display name
+  function getPlatformName(platform) {
+    if (platform === 'chatgpt') return 'ChatGPT';
+    if (platform === 'claude') return 'Claude';
+    return 'AI';
+  }
+
   // Create share button
   function createShareButton() {
     const button = document.createElement('button');
@@ -149,6 +213,12 @@
       button.classList.add('loading');
       button.innerHTML = '<span>生成中...</span>';
 
+      // Get platform and topic info
+      const platform = detectPlatform();
+      const platformName = getPlatformName(platform);
+      const topic = getConversationTopic();
+      const logo = getPlatformLogo(platform);
+
       // Clone the element for rendering
       const clone = contentElement.cloneNode(true);
 
@@ -165,20 +235,25 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       `;
 
-      // Add branding
+      // Add branding with platform logo and topic
       const header = document.createElement('div');
       header.style.cssText = `
-        margin-bottom: 20px;
+        margin-bottom: 24px;
         padding-bottom: 20px;
         border-bottom: 2px solid #e5e7eb;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       `;
       header.innerHTML = `
-        <div style="font-size: 14px; color: #6b7280; display: flex; align-items: center; gap: 8px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          <span>AI 回答分享</span>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+          ${logo}
+          <div style="flex: 1;">
+            <div style="font-size: 16px; font-weight: 600; color: #111827; margin-bottom: 4px;">
+              ${platformName}
+            </div>
+            <div style="font-size: 13px; color: #6b7280;">
+              ${topic}
+            </div>
+          </div>
         </div>
       `;
 
