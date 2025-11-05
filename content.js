@@ -159,8 +159,8 @@
         left: -9999px;
         top: 0;
         background: white;
-        padding: 40px;
-        max-width: 800px;
+        padding: 48px;
+        width: 1200px;
         border-radius: 12px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       `;
@@ -196,41 +196,46 @@
       const unwanted = clone.querySelectorAll('button, .ai-share-button-container');
       unwanted.forEach(el => el.remove());
 
-      // Style code blocks with proper formatting
+      // Style code blocks with Material Design style
       const preBlocks = clone.querySelectorAll('pre');
       preBlocks.forEach(pre => {
         pre.style.cssText = `
-          background: #282c34;
-          padding: 16px;
-          border-radius: 8px;
-          margin: 12px 0;
+          background: #fafafa;
+          padding: 20px;
+          border-radius: 4px;
+          margin: 16px 0;
           overflow-x: auto;
-          border: 1px solid #3e4451;
+          border-left: 4px solid #42a5f5;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
         `;
 
         const code = pre.querySelector('code');
         if (code) {
           code.style.cssText = `
-            font-family: "Fira Code", "Cascadia Code", "Monaco", "Menlo", "Consolas", monospace;
-            font-size: 13px;
-            line-height: 1.5;
-            color: #abb2bf;
+            font-family: "Roboto Mono", "Fira Code", "Consolas", "Monaco", monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #263238;
             display: block;
-            white-space: pre;
+            white-space: pre-wrap;
+            word-wrap: break-word;
           `;
         }
       });
 
-      // Style inline code
+      // Style inline code with Material Design style
       const inlineCodes = clone.querySelectorAll('code:not(pre code)');
       inlineCodes.forEach(code => {
         code.style.cssText = `
-          background: #f3f4f6;
-          color: #e83e8c;
-          padding: 2px 6px;
-          border-radius: 4px;
-          font-family: "Fira Code", "Monaco", "Menlo", monospace;
-          font-size: 0.9em;
+          background: #f5f5f5;
+          color: #d32f2f;
+          padding: 3px 8px;
+          border-radius: 3px;
+          font-family: "Roboto Mono", "Consolas", "Monaco", monospace;
+          font-size: 0.875em;
+          display: inline-block;
+          vertical-align: baseline;
+          line-height: 1.4;
         `;
       });
 
