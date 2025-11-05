@@ -387,7 +387,7 @@
       const canvas = await html2canvas(container, {
         backgroundColor: '#ffffff',
         scale: 2,
-        logging: false,
+        logging: true,  // Enable detailed logging for debugging
         useCORS: true,
         allowTaint: false,
         windowWidth: container.scrollWidth,
