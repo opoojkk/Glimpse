@@ -282,6 +282,44 @@
       const unwanted = clone.querySelectorAll('button, .ai-share-button-container');
       unwanted.forEach(el => el.remove());
 
+      // Fix unsupported color formats (oklch, lab, etc.) for html2canvas
+      const allElements = clone.querySelectorAll('*');
+      let fixedCount = 0;
+      allElements.forEach(el => {
+        try {
+          // Check inline styles for unsupported color formats
+          const styleAttr = el.getAttribute('style');
+          if (styleAttr && (
+            styleAttr.includes('oklch') ||
+            styleAttr.includes('lab(') ||
+            styleAttr.includes('lch(') ||
+            styleAttr.includes('color(')
+          )) {
+            // Remove the problematic style attribute and apply safe defaults
+            el.removeAttribute('style');
+            fixedCount++;
+          }
+
+          // Also check computed styles and override if needed
+          const computedStyle = window.getComputedStyle(el);
+          const color = computedStyle.color;
+          const bgColor = computedStyle.backgroundColor;
+
+          // If we can't parse the color (indicates unsupported format)
+          if (color && (color === '' || color.includes('oklch'))) {
+            el.style.color = '#1f2937';
+            fixedCount++;
+          }
+          if (bgColor && (bgColor === '' || bgColor.includes('oklch'))) {
+            el.style.backgroundColor = 'transparent';
+            fixedCount++;
+          }
+        } catch (e) {
+          // Ignore errors for elements without styles
+        }
+      });
+      console.log(`[AI Share] Fixed ${fixedCount} elements with unsupported color formats`);
+
       // Style code blocks with Material Design style
       const preBlocks = clone.querySelectorAll('pre');
       preBlocks.forEach(pre => {
@@ -368,8 +406,16 @@
         scale: 2,
         logging: false,
         useCORS: true,
+        allowTaint: false,
         windowWidth: container.scrollWidth,
-        windowHeight: container.scrollHeight
+        windowHeight: container.scrollHeight,
+        onclone: (clonedDoc) => {
+          // Additional cleanup in cloned document
+          const clonedContainer = clonedDoc.querySelector('[style*="position: fixed"]');
+          if (clonedContainer) {
+            console.log('[AI Share] Performing additional cleanup in cloned document');
+          }
+        }
       });
       console.log('[AI Share] Canvas generated successfully:', {
         width: canvas.width,
