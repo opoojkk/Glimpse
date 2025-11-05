@@ -282,43 +282,26 @@
       const unwanted = clone.querySelectorAll('button, .ai-share-button-container');
       unwanted.forEach(el => el.remove());
 
-      // Fix unsupported color formats (oklch, lab, etc.) for html2canvas
+      // Aggressive color format cleanup - remove all class-based styles
+      // This prevents oklch colors from CSS stylesheets from being applied
       const allElements = clone.querySelectorAll('*');
-      let fixedCount = 0;
+      console.log(`[AI Share] Processing ${allElements.length} elements for color cleanup`);
+
       allElements.forEach(el => {
         try {
-          // Check inline styles for unsupported color formats
+          // Remove all class attributes to prevent CSS-based oklch colors
+          el.removeAttribute('class');
+
+          // Remove inline styles that might contain oklch
           const styleAttr = el.getAttribute('style');
-          if (styleAttr && (
-            styleAttr.includes('oklch') ||
-            styleAttr.includes('lab(') ||
-            styleAttr.includes('lch(') ||
-            styleAttr.includes('color(')
-          )) {
-            // Remove the problematic style attribute and apply safe defaults
+          if (styleAttr && /oklch|lab\(|lch\(|color\(/.test(styleAttr)) {
             el.removeAttribute('style');
-            fixedCount++;
-          }
-
-          // Also check computed styles and override if needed
-          const computedStyle = window.getComputedStyle(el);
-          const color = computedStyle.color;
-          const bgColor = computedStyle.backgroundColor;
-
-          // If we can't parse the color (indicates unsupported format)
-          if (color && (color === '' || color.includes('oklch'))) {
-            el.style.color = '#1f2937';
-            fixedCount++;
-          }
-          if (bgColor && (bgColor === '' || bgColor.includes('oklch'))) {
-            el.style.backgroundColor = 'transparent';
-            fixedCount++;
           }
         } catch (e) {
-          // Ignore errors for elements without styles
+          // Ignore errors
         }
       });
-      console.log(`[AI Share] Fixed ${fixedCount} elements with unsupported color formats`);
+      console.log('[AI Share] Removed all class attributes and problematic inline styles');
 
       // Style code blocks with Material Design style
       const preBlocks = clone.querySelectorAll('pre');
@@ -410,11 +393,47 @@
         windowWidth: container.scrollWidth,
         windowHeight: container.scrollHeight,
         onclone: (clonedDoc) => {
-          // Additional cleanup in cloned document
-          const clonedContainer = clonedDoc.querySelector('[style*="position: fixed"]');
-          if (clonedContainer) {
-            console.log('[AI Share] Performing additional cleanup in cloned document');
+          console.log('[AI Share] Performing deep cleanup in cloned document');
+
+          // Find our container in the cloned document
+          const clonedContainer = Array.from(clonedDoc.querySelectorAll('div')).find(
+            div => div.style.position === 'fixed' && div.style.left === '-9999px'
+          );
+
+          if (!clonedContainer) {
+            console.warn('[AI Share] Could not find cloned container');
+            return;
           }
+
+          // Remove all class attributes from container's children
+          const clonedElements = clonedContainer.querySelectorAll('*');
+          let processedCount = 0;
+
+          clonedElements.forEach(el => {
+            try {
+              // Remove class to prevent CSS-based oklch colors
+              if (el.className) {
+                el.removeAttribute('class');
+                processedCount++;
+              }
+
+              // Override any remaining color styles
+              const tagName = el.tagName.toLowerCase();
+              if (tagName !== 'svg' && tagName !== 'path' && tagName !== 'circle' && tagName !== 'line' && tagName !== 'rect') {
+                // Set safe defaults if no explicit style is set
+                if (!el.style.color) {
+                  el.style.color = '#1f2937';
+                }
+                if (!el.style.backgroundColor) {
+                  el.style.backgroundColor = 'transparent';
+                }
+              }
+            } catch (e) {
+              // Ignore errors
+            }
+          });
+
+          console.log(`[AI Share] Cleaned ${processedCount} elements in cloned container`);
         }
       });
       console.log('[AI Share] Canvas generated successfully:', {
