@@ -1,92 +1,97 @@
 # 贡献指南
 
-想帮忙改进这个项目？太好了！
+欢迎参与 Glimpse 项目的开发。
 
-## 怎么开始
+## 开始之前
 
-1. Fork 这个仓库
-2. Clone 到本地：
+1. Fork 本仓库
+2. 克隆到本地：
    ```bash
    git clone https://github.com/your-username/Glimpse.git
    cd Glimpse
    ```
 
-3. 创建一个新分支：
+3. 创建特性分支：
    ```bash
-   git checkout -b my-feature
+   git checkout -b feature-name
    ```
 
 ## 开发流程
 
-**测试你的改动**
+### 本地测试
 
-1. 打开 Chrome 的 `chrome://extensions/`
+1. 打开浏览器扩展页面
+   - Chrome: `chrome://extensions/`
+   - Edge: `edge://extensions/`
+   - Brave: `brave://extensions/`
+
 2. 开启"开发者模式"
-3. "加载已解压的扩展程序"，选择项目文件夹
-4. 在 ChatGPT 和 Claude 里都测试一下
+3. 点击"加载已解压的扩展程序"
+4. 选择项目文件夹
 
-**主要文件**
-- `content.js` - 核心功能
-- `styles.css` - 样式
-- `manifest.json` - 配置
+### 主要文件
 
-**提交代码**
+- `content.js` - 核心功能实现
+- `styles.css` - 样式定义
+- `manifest.json` - 扩展配置
+
+### 提交更改
 
 ```bash
 git add .
-git commit -m "简单描述你改了什么"
-git push origin my-feature
+git commit -m "描述你的更改"
+git push origin feature-name
 ```
 
-然后去 GitHub 提个 Pull Request 就行。
+然后在 GitHub 上创建 Pull Request。
 
 ## 代码规范
 
-没有特别严格的要求，基本上：
+### JavaScript
+- 使用 ES6+ 语法
+- 变量命名清晰易懂
+- 复杂逻辑添加注释
+- 保持函数简洁
 
-- 用 ES6+ 的语法
-- 变量名起得能看懂就行
-- 复杂的地方加个注释
-- 函数不要写得太长
+### 提交信息
 
-**提交信息**
-
-随意一点也没关系，能看懂改了啥就行。比如：
+建议使用清晰的提交信息，例如：
 
 ```
-feat: 加了 JPEG 导出
-fix: 修了某某bug
-docs: 更新了 README
+feat: 添加 JPEG 导出功能
+fix: 修复代码块渲染问题
+docs: 更新安装说明
 ```
 
-当然用 [Conventional Commits](https://www.conventionalcommits.org/) 格式更好，但不强求。
+参考 [Conventional Commits](https://www.conventionalcommits.org/) 规范更佳。
 
-## 报告 Bug
+## Bug 报告
 
-提 issue 之前可以先搜一下有没有人提过类似的。
+提交 Issue 前建议先搜索是否有类似问题。
 
-**最好包含这些信息：**
-- 什么浏览器，什么版本
-- 在 ChatGPT 还是 Claude
-- 怎么复现这个问题
-- 控制台有没有报错（F12 打开看）
-- 截个图会更清楚
+### 应包含信息
 
-## 建议新功能
+- 浏览器版本
+- 使用平台（ChatGPT/Claude）
+- 复现步骤
+- 控制台错误（F12）
+- 截图（如有）
 
-直接说你想要什么功能，为什么需要就行。能说说具体使用场景就更好了。
+## 功能建议
 
-## 测试
+描述功能需求和使用场景，说明预期效果。
 
-提 PR 之前记得：
-- ChatGPT 和 Claude 都测试一下
-- 控制台没报错
+## 测试要求
+
+提交 PR 前请确保：
+- 在 ChatGPT 和 Claude 上测试通过
+- 控制台无错误
 - 不影响现有功能
 
-## 其他
+## 社区准则
 
-- 友善一点，大家都是来帮忙的
-- 新手也欢迎，不懂就问
-- 有问题直接在 Issues 里讨论
+- 保持友善和尊重
+- 欢迎新手参与
+- 鼓励建设性讨论
 
-感谢！
+感谢你的贡献。
