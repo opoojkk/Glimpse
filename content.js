@@ -61,28 +61,34 @@
     return '对话分享';
   }
 
-  // Get platform logo SVG
+  // Get platform logo HTML
   function getPlatformLogo(platform) {
     if (platform === 'chatgpt') {
       return `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.896zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08-4.778 2.758a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z" fill="#10a37f"/>
-        </svg>
+        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #10a37f 0%, #1a7f64 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
       `;
     } else if (platform === 'claude') {
       return `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M17.754 13.97l-4.983 8.73a3.903 3.903 0 0 1-6.785-.07L1.301 13.3a3.896 3.896 0 0 1 .021-3.867L6.006 1.33a3.903 3.903 0 0 1 6.785.07L17.476 10.732a3.896 3.896 0 0 1 .278 3.237z" fill="#CC9B7A"/>
-          <path d="M22.699 13.3l-4.685 8.33a3.903 3.903 0 0 1-6.785-.07l-4.684-9.332a3.896 3.896 0 0 1 .021-3.867l4.684-8.33a3.903 3.903 0 0 1 6.785.07l4.685 9.331a3.896 3.896 0 0 1-.021 3.867z" fill="#191919"/>
-        </svg>
+        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #CC9B7A 0%, #A67C5C 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M9 9h6M9 15h6"/>
+          </svg>
+        </div>
       `;
     }
 
     // Default icon
     return `
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
+      <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
     `;
   }
 
@@ -209,6 +215,8 @@
   // Generate share image
   async function generateShareImage(contentElement, button) {
     try {
+      console.log('[AI Share] Starting image generation...');
+
       // Show loading state
       button.classList.add('loading');
       button.innerHTML = '<span>生成中...</span>';
@@ -219,8 +227,11 @@
       const topic = getConversationTopic();
       const logo = getPlatformLogo(platform);
 
+      console.log('[AI Share] Platform info:', { platform, platformName, topic });
+
       // Clone the element for rendering
       const clone = contentElement.cloneNode(true);
+      console.log('[AI Share] Content cloned successfully');
 
       // Create a container for the image
       const container = document.createElement('div');
@@ -345,8 +356,13 @@
 
       container.appendChild(clone);
       document.body.appendChild(container);
+      console.log('[AI Share] Container added to DOM, dimensions:', {
+        width: container.scrollWidth,
+        height: container.scrollHeight
+      });
 
       // Generate image using html2canvas
+      console.log('[AI Share] Starting html2canvas rendering...');
       const canvas = await html2canvas(container, {
         backgroundColor: '#ffffff',
         scale: 2,
@@ -355,9 +371,14 @@
         windowWidth: container.scrollWidth,
         windowHeight: container.scrollHeight
       });
+      console.log('[AI Share] Canvas generated successfully:', {
+        width: canvas.width,
+        height: canvas.height
+      });
 
       // Remove temporary container
       document.body.removeChild(container);
+      console.log('[AI Share] Container removed from DOM');
 
       // Reset button state
       button.classList.remove('loading');
@@ -383,6 +404,12 @@
 
     } catch (error) {
       console.error('Error generating image:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        platform: detectPlatform()
+      });
+
       button.classList.remove('loading');
       button.innerHTML = `
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -394,7 +421,7 @@
         </svg>
         <span>分享为图片</span>
       `;
-      showToast('生成图片失败，请重试', 'error');
+      showToast(`生成失败: ${error.message}`, 'error');
     }
   }
 
