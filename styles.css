@@ -1,0 +1,100 @@
+/* AI Response Share Plugin Styles */
+
+.ai-share-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding-top: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Show button on hover */
+[data-message-author-role="assistant"]:hover .ai-share-button-container,
+[data-test-render-count]:hover .ai-share-button-container {
+  opacity: 1;
+}
+
+.ai-share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #374151;
+  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ai-share-button:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.ai-share-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ai-share-button.loading {
+  opacity: 0.6;
+  cursor: wait;
+  pointer-events: none;
+}
+
+.ai-share-button svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Toast notification */
+.ai-share-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #10b981;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  z-index: 10000;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.ai-share-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ai-share-toast.error {
+  background: #ef4444;
+}
+
+/* Dark mode support for ChatGPT */
+.dark .ai-share-button {
+  background: #2d2d2d;
+  border-color: #404040;
+  color: #e5e7eb;
+}
+
+.dark .ai-share-button:hover {
+  background: #3d3d3d;
+  border-color: #505050;
+}
+
+/* Claude-specific adjustments */
+body[class*="claude"] .ai-share-button-container {
+  margin-top: 8px;
+}
