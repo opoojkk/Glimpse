@@ -55,6 +55,93 @@
     return content;
   }
 
+  // Create preview modal
+  function createPreviewModal(canvas) {
+    const modal = document.createElement('div');
+    modal.className = 'ai-share-modal';
+    modal.innerHTML = `
+      <div class="ai-share-modal-overlay"></div>
+      <div class="ai-share-modal-content">
+        <div class="ai-share-modal-header">
+          <h3>图片预览</h3>
+          <button class="ai-share-modal-close" title="关闭">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="ai-share-modal-body">
+          <img src="${canvas.toDataURL()}" alt="预览图片" />
+        </div>
+        <div class="ai-share-modal-footer">
+          <button class="ai-share-modal-download">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>下载图片</span>
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Close modal on overlay click
+    const overlay = modal.querySelector('.ai-share-modal-overlay');
+    overlay.addEventListener('click', () => {
+      closeModal(modal);
+    });
+
+    // Close modal on close button click
+    const closeBtn = modal.querySelector('.ai-share-modal-close');
+    closeBtn.addEventListener('click', () => {
+      closeModal(modal);
+    });
+
+    // Download image
+    const downloadBtn = modal.querySelector('.ai-share-modal-download');
+    downloadBtn.addEventListener('click', () => {
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ai-response-${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        showToast('图片已保存！');
+        closeModal(modal);
+      });
+    });
+
+    // Close on Escape key
+    const escapeHandler = (e) => {
+      if (e.key === 'Escape') {
+        closeModal(modal);
+      }
+    };
+    document.addEventListener('keydown', escapeHandler);
+    modal._escapeHandler = escapeHandler;
+
+    return modal;
+  }
+
+  // Close modal
+  function closeModal(modal) {
+    modal.classList.remove('show');
+    setTimeout(() => {
+      if (modal.parentNode) {
+        document.body.removeChild(modal);
+      }
+      if (modal._escapeHandler) {
+        document.removeEventListener('keydown', modal._escapeHandler);
+      }
+    }, 300);
+  }
+
   // Generate share image
   async function generateShareImage(contentElement, button) {
     try {
@@ -105,16 +192,74 @@
         color: #1f2937;
       `;
 
-      // Style code blocks
-      const codeBlocks = clone.querySelectorAll('pre, code');
-      codeBlocks.forEach(block => {
-        block.style.cssText = `
-          background: #f3f4f6;
-          padding: 12px;
-          border-radius: 6px;
-          font-family: "Monaco", "Menlo", monospace;
-          font-size: 13px;
+      // Remove unwanted elements
+      const unwanted = clone.querySelectorAll('button, .ai-share-button-container');
+      unwanted.forEach(el => el.remove());
+
+      // Style code blocks with proper formatting
+      const preBlocks = clone.querySelectorAll('pre');
+      preBlocks.forEach(pre => {
+        pre.style.cssText = `
+          background: #282c34;
+          padding: 16px;
+          border-radius: 8px;
+          margin: 12px 0;
           overflow-x: auto;
+          border: 1px solid #3e4451;
+        `;
+
+        const code = pre.querySelector('code');
+        if (code) {
+          code.style.cssText = `
+            font-family: "Fira Code", "Cascadia Code", "Monaco", "Menlo", "Consolas", monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #abb2bf;
+            display: block;
+            white-space: pre;
+          `;
+        }
+      });
+
+      // Style inline code
+      const inlineCodes = clone.querySelectorAll('code:not(pre code)');
+      inlineCodes.forEach(code => {
+        code.style.cssText = `
+          background: #f3f4f6;
+          color: #e83e8c;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-family: "Fira Code", "Monaco", "Menlo", monospace;
+          font-size: 0.9em;
+        `;
+      });
+
+      // Style headings
+      const headings = clone.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      headings.forEach(heading => {
+        heading.style.cssText = `
+          margin-top: 16px;
+          margin-bottom: 8px;
+          font-weight: 600;
+          color: #111827;
+        `;
+      });
+
+      // Style lists
+      const lists = clone.querySelectorAll('ul, ol');
+      lists.forEach(list => {
+        list.style.cssText = `
+          margin: 8px 0;
+          padding-left: 24px;
+        `;
+      });
+
+      // Style paragraphs
+      const paragraphs = clone.querySelectorAll('p');
+      paragraphs.forEach(p => {
+        p.style.cssText = `
+          margin: 8px 0;
+          line-height: 1.6;
         `;
       });
 
@@ -126,39 +271,35 @@
         backgroundColor: '#ffffff',
         scale: 2,
         logging: false,
-        useCORS: true
+        useCORS: true,
+        windowWidth: container.scrollWidth,
+        windowHeight: container.scrollHeight
       });
 
       // Remove temporary container
       document.body.removeChild(container);
 
-      // Convert to blob and download
-      canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `ai-response-${Date.now()}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+      // Reset button state
+      button.classList.remove('loading');
+      button.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="18" cy="5" r="3"/>
+          <circle cx="6" cy="12" r="3"/>
+          <circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+        <span>分享为图片</span>
+      `;
 
-        // Reset button state
-        button.classList.remove('loading');
-        button.innerHTML = `
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="18" cy="5" r="3"/>
-            <circle cx="6" cy="12" r="3"/>
-            <circle cx="18" cy="19" r="3"/>
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-          </svg>
-          <span>分享为图片</span>
-        `;
+      // Show preview modal
+      const modal = createPreviewModal(canvas);
+      document.body.appendChild(modal);
 
-        // Show success message
-        showToast('图片已保存！');
-      });
+      // Trigger animation
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 10);
 
     } catch (error) {
       console.error('Error generating image:', error);
